@@ -30,6 +30,20 @@
 *-----------------------------------------------------------------------------*/
 #ifndef RTKLIB_H
 #define RTKLIB_H
+
+#define WIN32
+// #define _RTLDLL 
+#define NO_STRICT 
+#define TRACE 
+#define ENAGLO 
+#define ENAQZS 
+#define ENAGAL 
+#define ENACMP 
+#define ENAIRN
+#define NFREQ 3
+#define NEXOBS 3
+#define EXTLEX 
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>

@@ -6,7 +6,7 @@ project(rtklib LANGUAGES C)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_definitions(-D_RTLDLL -DNO_STRICT -DTRACE -DENAGLO -DENAQZS -DENAGAL -DENACMP -DENAIRN -DNFREQ=3 -DNEXOBS=3 -DEXTLEX )
+# add_definitions(-D_RTLDLL -DNO_STRICT -DTRACE -DENAGLO -DENAQZS -DENAGAL -DENACMP -DENAIRN -DNFREQ=3 -DNEXOBS=3 -DEXTLEX )
 
 include_directories(${PROJECT_NAME} ${CMAKE_CURRENT_LIST_DIR}/include)
 
@@ -67,5 +67,8 @@ target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/in
 
 add_executable(rtkconv bin/convbin.c)
 target_link_libraries(rtkconv rtklib)
+
+add_executable(rnx2rtkp bin/rnx2rtkp.c)
+target_link_libraries(rnx2rtkp rtklib)
 
 
