@@ -358,7 +358,7 @@ static int valsol(const double *azel, const int *vsat, int n,
         azels[1+ns*2]=azel[1+i*2];
         ns++;
     }
-    dops(ns,azels,opt->elmin,dop);
+    rtklib_dops(ns,azels,opt->elmin,dop);
     if (dop[0]<=0.0||dop[0]>opt->maxgdop) {
         sprintf(msg,"gdop error nv=%d gdop=%.1f",nv,dop[0]);
         return 0;

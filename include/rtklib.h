@@ -1438,13 +1438,13 @@ EXPORT void createdir(const char *path);
 /* positioning models --------------------------------------------------------*/
 EXPORT double satazel(const double *pos, const double *e, double *azel);
 EXPORT double geodist(const double *rs, const double *rr, double *e);
-EXPORT void dops(int ns, const double *azel, double elmin, double *dop);
+EXPORT void rtklib_dops(int ns, const double *azel, double elmin, double *dop);
 
 /* atmosphere models ---------------------------------------------------------*/
 EXPORT double ionmodel(gtime_t t, const double *ion, const double *pos,
                        const double *azel);
 EXPORT double ionmapf(const double *pos, const double *azel);
-EXPORT double ionppp(const double *pos, const double *azel, double re,
+EXPORT double rtklib_ionppp(const double *pos, const double *azel, double re,
                      double hion, double *pppos);
 EXPORT double tropmodel(gtime_t time, const double *pos, const double *azel,
                         double humi);

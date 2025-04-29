@@ -3568,7 +3568,7 @@ extern double satazel(const double *pos, const double *e, double *azel)
 *-----------------------------------------------------------------------------*/
 #define SQRT(x)     ((x)<0.0||(x)!=(x)?0.0:sqrt(x))
 
-extern void dops(int ns, const double *azel, double elmin, double *dop)
+extern void rtklib_dops(int ns, const double *azel, double elmin, double *dop)
 {
     double H[4*MAXSAT],Q[16],cosel,sinel;
     int i,n;
@@ -3664,7 +3664,7 @@ extern double ionmapf(const double *pos, const double *azel)
 * notes  : see ref [2], only valid on the earth surface
 *          fixing bug on ref [2] A.4.4.10.1 A-22,23
 *-----------------------------------------------------------------------------*/
-extern double ionppp(const double *pos, const double *azel, double re,
+extern double rtklib_ionppp(const double *pos, const double *azel, double re,
                      double hion, double *posp)
 {
     double cosaz,rp,ap,sinap,tanap;
