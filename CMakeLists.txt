@@ -64,10 +64,10 @@ target_link_libraries(${PROJECT_NAME} pthread)
 ENDIF()
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-add_executable(rtkconv bin/convbin.c)
-target_link_libraries(rtkconv rtklib)
+add_executable(rtklib_rtkconv bin/convbin.c)
+target_link_libraries(rtklib_rtkconv rtklib)
 
-add_executable(rnx2rtkp bin/rnx2rtkp.c)
-target_link_libraries(rnx2rtkp rtklib)
+add_executable(rtklib_rnx2rtkp bin/rnx2rtkp.c)
+target_link_libraries(rtklib_rnx2rtkp rtklib)
 
 
