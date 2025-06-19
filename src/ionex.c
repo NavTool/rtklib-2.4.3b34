@@ -388,7 +388,7 @@ static int iondelay(gtime_t time, const tec_t *tec, const double *pos,
         hion=tec->hgts[0]+tec->hgts[2]*i;
         
         /* ionospheric pierce point position */
-        fs=ionppp(pos,azel,tec->rb,hion,posp);
+        fs=rtklib_ionppp(pos,azel,tec->rb,hion,posp);
         
         if (opt&2) {
             /* modified single layer mapping function (M-SLM) ref [2] */
