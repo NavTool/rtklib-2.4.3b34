@@ -60,7 +60,7 @@ add_library(${PROJECT_NAME} STATIC ${SOURCES})
 IF(CMAKE_HOST_SYSTEM_NAME MATCHES "Windows")
 target_link_libraries(${PROJECT_NAME} winmm)
 ELSE()
-target_link_libraries(${PROJECT_NAME} pthread m)
+target_link_libraries(${PROJECT_NAME} pthread)
 ENDIF()
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
