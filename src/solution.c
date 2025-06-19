@@ -1329,7 +1329,7 @@ extern int outnmea_gsa(uint8_t *buff, const sol_t *sol, const ssat_t *ssat)
         azel[2*nsat+1]=ssat[i].azel[1];
         sats[nsat++]=i+1;
     }
-    rtklib_dops(nsat,azel,0.0,dop);
+    dops(nsat,azel,0.0,dop);
     
     for (i=0;nmea_sys[i];i++) {
         for (j=nsat=0;j<MAXSAT&&nsat<12;j++) {

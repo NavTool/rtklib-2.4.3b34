@@ -520,18 +520,18 @@ extern "C" {
 #define P2_55       2.775557561562891E-17 /* 2^-55 */
 
 #ifdef WIN32
-#define rtklib_thread_t    HANDLE
-#define rtklib_lock_t      CRITICAL_SECTION
-#define rtklib_initlock(f) InitializeCriticalSection(f)
-#define rtklib_lock(f)     EnterCriticalSection(f)
-#define rtklib_unlock(f)   LeaveCriticalSection(f)
+#define thread_t    HANDLE
+#define lock_t      CRITICAL_SECTION
+#define initlock(f) InitializeCriticalSection(f)
+#define lock(f)     EnterCriticalSection(f)
+#define unlock(f)   LeaveCriticalSection(f)
 #define FILEPATHSEP '\\'
 #else
-#define rtklib_thread_t    pthread_t
-#define rtklib_lock_t      pthread_mutex_t
-#define rtklib_initlock(f) pthread_mutex_init(f,NULL)
-#define rtklib_lock(f)     pthread_mutex_lock(f)
-#define rtklib_unlock(f)   pthread_mutex_unlock(f)
+#define thread_t    pthread_t
+#define lock_t      pthread_mutex_t
+#define initlock(f) pthread_mutex_init(f,NULL)
+#define lock(f)     pthread_mutex_lock(f)
+#define unlock(f)   pthread_mutex_unlock(f)
 #define FILEPATHSEP '/'
 #endif
 
@@ -1191,7 +1191,7 @@ typedef struct {        /* stream type */
     uint32_t tick_o;    /* output tick */
     uint32_t tact;      /* active tick */
     uint32_t inbt,outbt; /* input/output bytes at tick */
-    rtklib_lock_t lock;        /* lock flag */
+    lock_t lock;        /* lock flag */
     void *port;         /* type dependent port control struct */
     char path[MAXSTRPATH]; /* stream path */
     char msg [MAXSTRMSG];  /* stream message */
@@ -1226,8 +1226,8 @@ typedef struct {        /* stream server type */
     stream_t stream[16]; /* input/output streams */
     stream_t strlog[16]; /* return log streams */
     strconv_t *conv[16]; /* stream converter */
-    rtklib_thread_t thread;    /* server thread */
-    rtklib_lock_t lock;        /* lock flag */
+    thread_t thread;    /* server thread */
+    lock_t lock;        /* lock flag */
 } strsvr_t;
 
 typedef struct {        /* RTK server type */
@@ -1261,7 +1261,7 @@ typedef struct {        /* RTK server type */
     stream_t stream[8]; /* streams {rov,base,corr,sol1,sol2,logr,logb,logc} */
     stream_t *moni;     /* monitor stream */
     uint32_t tick;      /* start tick */
-    rtklib_thread_t thread;    /* server thread */
+    thread_t thread;    /* server thread */
     int cputime;        /* CPU time (ms) for a processing cycle */
     int prcout;         /* missing observation data count */
     int nave;           /* number of averaging base pos */
@@ -1269,7 +1269,7 @@ typedef struct {        /* RTK server type */
     char cmds_periodic[3][MAXRCVCMD]; /* periodic commands */
     char cmd_reset[MAXRCVCMD]; /* reset command */
     double bl_reset;    /* baseline length to reset (km) */
-    rtklib_lock_t lock;        /* lock flag */
+    lock_t lock;        /* lock flag */
 } rtksvr_t;
 
 typedef struct {        /* GIS data point type */
@@ -1438,13 +1438,13 @@ EXPORT void createdir(const char *path);
 /* positioning models --------------------------------------------------------*/
 EXPORT double satazel(const double *pos, const double *e, double *azel);
 EXPORT double geodist(const double *rs, const double *rr, double *e);
-EXPORT void rtklib_dops(int ns, const double *azel, double elmin, double *dop);
+EXPORT void dops(int ns, const double *azel, double elmin, double *dop);
 
 /* atmosphere models ---------------------------------------------------------*/
 EXPORT double ionmodel(gtime_t t, const double *ion, const double *pos,
                        const double *azel);
 EXPORT double ionmapf(const double *pos, const double *azel);
-EXPORT double rtklib_ionppp(const double *pos, const double *azel, double re,
+EXPORT double ionppp(const double *pos, const double *azel, double re,
                      double hion, double *pppos);
 EXPORT double tropmodel(gtime_t time, const double *pos, const double *azel,
                         double humi);

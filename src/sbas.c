@@ -678,7 +678,7 @@ extern int sbsioncorr(gtime_t time, const nav_t *nav, const double *pos,
     if (pos[2]<-100.0||azel[1]<=0) return 1;
     
     /* ipp (ionospheric pierce point) position */
-    fp=rtklib_ionppp(pos,azel,re,hion,posp);
+    fp=ionppp(pos,azel,re,hion,posp);
     
     /* search igps around ipp */
     searchigp(time,posp,nav->sbsion,igp,&x,&y);
