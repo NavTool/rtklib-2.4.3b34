@@ -755,7 +755,7 @@ extern int rtksvrinit(rtksvr_t *svr)
     for (i=0;i<3;i++) *svr->cmds_periodic[i]='\0';
     *svr->cmd_reset='\0';
     svr->bl_reset=10.0;
-    initlock(&svr->lock);
+    rtklib_initlock(&svr->lock);
     
     return 1;
 }
@@ -781,8 +781,8 @@ extern void rtksvrfree(rtksvr_t *svr)
 * args   : rtksvr_t *svr    IO rtk server
 * return : status (1:ok 0:error)
 *-----------------------------------------------------------------------------*/
-extern void rtksvrlock  (rtksvr_t *svr) {lock  (&svr->lock);}
-extern void rtksvrunlock(rtksvr_t *svr) {unlock(&svr->lock);}
+extern void rtksvrlock  (rtksvr_t *svr) {rtklib_lock  (&svr->lock);}
+extern void rtksvrunlock(rtksvr_t *svr) {rtklib_unlock(&svr->lock);}
 
 /* start rtk server ------------------------------------------------------------
 * start rtk server thread
