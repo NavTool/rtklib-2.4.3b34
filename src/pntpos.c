@@ -264,7 +264,10 @@ static int rescode(int iter, const obsd_t *obs, int n, const double *rs,
         vsat[i]=0; azel[i*2]=azel[1+i*2]=resp[i]=0.0;
         time=obs[i].time;
         sat=obs[i].sat;
-        if (!(sys=satsys(sat,NULL))) continue;
+        if (!(sys=satsys(sat,NULL)))
+        {
+            continue;
+        }
         
         /* reject duplicated observation data */
         if (i<n-1&&i<MAXOBS-1&&sat==obs[i+1].sat) {
@@ -273,33 +276,53 @@ static int rescode(int iter, const obsd_t *obs, int n, const double *rs,
             continue;
         }
         /* excluded satellite? */
-        if (satexclude(sat,vare[i],svh[i],opt)) continue;
+        if (satexclude(sat,vare[i],svh[i],opt))
+        {
+            continue;
+        }
         
         /* geometric distance */
-        if ((r=geodist(rs+i*6,rr,e))<=0.0) continue;
+        if ((r=geodist(rs+i*6,rr,e))<=0.0)
+        {
+            continue;
+        }
         
         if (iter>0) {
             /* test elevation mask */
-            if (satazel(pos,e,azel+i*2)<opt->elmin) continue;
-            
-            /* test SNR mask */
-            if (!snrmask(obs+i,azel+i*2,opt)) continue;
-            
-            /* ionospheric correction */
-            if (!ionocorr(time,nav,sat,pos,azel+i*2,opt->ionoopt,&dion,&vion)) {
+            if (satazel(pos,e,azel+i*2)<opt->elmin)
+            {
                 continue;
             }
-            if ((freq=sat2freq(sat,obs[i].code[0],nav))==0.0) continue;
+            
+            /* test SNR mask */
+            if (!snrmask(obs+i,azel+i*2,opt))
+            {
+                continue;
+            }
+            
+            /* ionospheric correction */
+            if (!ionocorr(time,nav,sat,pos,azel+i*2,opt->ionoopt,&dion,&vion))
+            {
+                continue;
+            }
+            if ((freq=sat2freq(sat,obs[i].code[0],nav))==0.0)
+            {
+                continue;
+            }
             dion*=SQR(FREQ1/freq);
             vion*=SQR(FREQ1/freq);
             
             /* tropospheric correction */
-            if (!tropcorr(time,nav,pos,azel+i*2,opt->tropopt,&dtrp,&vtrp)) {
+            if (!tropcorr(time,nav,pos,azel+i*2,opt->tropopt,&dtrp,&vtrp))
+            {
                 continue;
             }
         }
         /* psendorange with code bias correction */
-        if ((P=prange(obs+i,nav,opt,&vmeas))==0.0) continue;
+        if ((P=prange(obs+i,nav,opt,&vmeas))==0.0)
+        {
+            continue;
+        }
         
         /* pseudorange residual */
         v[nv]=P-(r+dtr-CLIGHT*dts[i*2]+dion+dtrp);
@@ -384,7 +407,7 @@ static int estpos(const obsd_t *obs, int n, const double *rs, const double *dts,
         
         /* pseudorange residuals (m) */
         nv=rescode(i,obs,n,rs,dts,vare,svh,nav,x,opt,v,H,var,azel,vsat,resp,
-                   &ns);
+                     &ns);
         
         if (nv<NX) {
             sprintf(msg,"lack of valid sats ns=%d",nv);
@@ -540,7 +563,7 @@ static int resdop(const obsd_t *obs, int n, const double *rs, const double *dts,
         }
         /* range rate with earth rotation correction */
         rate=dot(vs,e,3)+OMGE/CLIGHT*(rs[4+i*6]*rr[0]+rs[1+i*6]*x[0]-
-                                      rs[3+i*6]*rr[1]-rs[  i*6]*x[1]);
+                                                rs[3+i*6]*rr[1]-rs[  i*6]*x[1]);
         
         /* Std of range rate error (m/s) */
         sig=(err<=0.0)?1.0:err*CLIGHT/freq;

@@ -231,9 +231,9 @@ extern void eph2pos(gtime_t time, const eph_t *eph, double *rs, double *dts,
     tk=timediff(time,eph->toe);
     
     switch ((sys=satsys(eph->sat,&prn))) {
-        case SYS_GAL: mu=MU_GAL; omge=OMGE_GAL; break;
-        case SYS_CMP: mu=MU_CMP; omge=OMGE_CMP; break;
-        default:      mu=MU_GPS; omge=OMGE;     break;
+    case SYS_GAL: mu=MU_GAL; omge=OMGE_GAL; break;
+    case SYS_CMP: mu=MU_CMP; omge=OMGE_CMP; break;
+    default:      mu=MU_GPS; omge=OMGE;     break;
     }
     M=eph->M0+(sqrt(mu/(eph->A*eph->A*eph->A))+eph->deln)*tk;
     
@@ -428,12 +428,12 @@ static eph_t *seleph(gtime_t time, int sat, int iode, const nav_t *nav)
     
     sys=satsys(sat,NULL);
     switch (sys) {
-        case SYS_GPS: tmax=MAXDTOE+1.0    ; sel=eph_sel[0]; break;
-        case SYS_GAL: tmax=MAXDTOE_GAL    ; sel=eph_sel[2]; break;
-        case SYS_QZS: tmax=MAXDTOE_QZS+1.0; sel=eph_sel[3]; break;
-        case SYS_CMP: tmax=MAXDTOE_CMP+1.0; sel=eph_sel[4]; break;
-        case SYS_IRN: tmax=MAXDTOE_IRN+1.0; sel=eph_sel[5]; break;
-        default: tmax=MAXDTOE+1.0; break;
+    case SYS_GPS: tmax=MAXDTOE+1.0    ; sel=eph_sel[0]; break;
+    case SYS_GAL: tmax=MAXDTOE_GAL    ; sel=eph_sel[2]; break;
+    case SYS_QZS: tmax=MAXDTOE_QZS+1.0; sel=eph_sel[3]; break;
+    case SYS_CMP: tmax=MAXDTOE_CMP+1.0; sel=eph_sel[4]; break;
+    case SYS_IRN: tmax=MAXDTOE_IRN+1.0; sel=eph_sel[5]; break;
+    default: tmax=MAXDTOE+1.0; break;
     }
     tmin=tmax+1.0;
     
@@ -544,21 +544,30 @@ static int ephpos(gtime_t time, gtime_t teph, int sat, const nav_t *nav,
     *svh=-1;
     
     if (sys==SYS_GPS||sys==SYS_GAL||sys==SYS_QZS||sys==SYS_CMP||sys==SYS_IRN) {
-        if (!(eph=seleph(teph,sat,iode,nav))) return 0;
+        if (!(eph=seleph(teph,sat,iode,nav)))
+        {
+            return 0;
+        }
         eph2pos(time,eph,rs,dts,var);
         time=timeadd(time,tt);
         eph2pos(time,eph,rst,dtst,var);
         *svh=eph->svh;
     }
     else if (sys==SYS_GLO) {
-        if (!(geph=selgeph(teph,sat,iode,nav))) return 0;
+        if (!(geph=selgeph(teph,sat,iode,nav)))
+        {
+            return 0;
+        }
         geph2pos(time,geph,rs,dts,var);
         time=timeadd(time,tt);
         geph2pos(time,geph,rst,dtst,var);
         *svh=geph->svh;
     }
     else if (sys==SYS_SBS) {
-        if (!(seph=selseph(teph,sat,nav))) return 0;
+        if (!(seph=selseph(teph,sat,nav)))
+        {
+            return 0;
+        }
         seph2pos(time,seph,rs,dts,var);
         time=timeadd(time,tt);
         seph2pos(time,seph,rst,dtst,var);
@@ -574,7 +583,7 @@ static int ephpos(gtime_t time, gtime_t teph, int sat, const nav_t *nav,
 }
 /* satellite position and clock with sbas correction -------------------------*/
 static int satpos_sbas(gtime_t time, gtime_t teph, int sat, const nav_t *nav,
-                        double *rs, double *dts, double *var, int *svh)
+                       double *rs, double *dts, double *var, int *svh)
 {
     const sbssatp_t *sbs;
     int i;
@@ -723,12 +732,12 @@ extern int satpos(gtime_t time, gtime_t teph, int sat, int ephopt,
     *svh=0;
     
     switch (ephopt) {
-        case EPHOPT_BRDC  : return ephpos     (time,teph,sat,nav,-1,rs,dts,var,svh);
-        case EPHOPT_SBAS  : return satpos_sbas(time,teph,sat,nav,   rs,dts,var,svh);
-        case EPHOPT_SSRAPC: return satpos_ssr (time,teph,sat,nav, 0,rs,dts,var,svh);
-        case EPHOPT_SSRCOM: return satpos_ssr (time,teph,sat,nav, 1,rs,dts,var,svh);
-        case EPHOPT_PREC  :
-            if (!peph2pos(time,sat,nav,1,rs,dts,var)) break; else return 1;
+    case EPHOPT_BRDC  : return ephpos     (time,teph,sat,nav,-1,rs,dts,var,svh);
+    case EPHOPT_SBAS  : return satpos_sbas(time,teph,sat,nav,   rs,dts,var,svh);
+    case EPHOPT_SSRAPC: return satpos_ssr (time,teph,sat,nav, 0,rs,dts,var,svh);
+    case EPHOPT_SSRCOM: return satpos_ssr (time,teph,sat,nav, 1,rs,dts,var,svh);
+    case EPHOPT_PREC  :
+        if (!peph2pos(time,sat,nav,1,rs,dts,var)) break; else return 1;
     }
     *svh=-1;
     return 0;
@@ -821,13 +830,13 @@ extern void satposs(gtime_t teph, const obsd_t *obs, int n, const nav_t *nav,
 extern void setseleph(int sys, int sel)
 {
     switch (sys) {
-        case SYS_GPS: eph_sel[0]=sel; break;
-        case SYS_GLO: eph_sel[1]=sel; break;
-        case SYS_GAL: eph_sel[2]=sel; break;
-        case SYS_QZS: eph_sel[3]=sel; break;
-        case SYS_CMP: eph_sel[4]=sel; break;
-        case SYS_IRN: eph_sel[5]=sel; break;
-        case SYS_SBS: eph_sel[6]=sel; break;
+    case SYS_GPS: eph_sel[0]=sel; break;
+    case SYS_GLO: eph_sel[1]=sel; break;
+    case SYS_GAL: eph_sel[2]=sel; break;
+    case SYS_QZS: eph_sel[3]=sel; break;
+    case SYS_CMP: eph_sel[4]=sel; break;
+    case SYS_IRN: eph_sel[5]=sel; break;
+    case SYS_SBS: eph_sel[6]=sel; break;
     }
 }
 /* get selected satellite ephemeris -------------------------------------------
@@ -839,13 +848,13 @@ extern void setseleph(int sys, int sel)
 extern int getseleph(int sys)
 {
     switch (sys) {
-        case SYS_GPS: return eph_sel[0];
-        case SYS_GLO: return eph_sel[1];
-        case SYS_GAL: return eph_sel[2];
-        case SYS_QZS: return eph_sel[3];
-        case SYS_CMP: return eph_sel[4];
-        case SYS_IRN: return eph_sel[5];
-        case SYS_SBS: return eph_sel[6];
+    case SYS_GPS: return eph_sel[0];
+    case SYS_GLO: return eph_sel[1];
+    case SYS_GAL: return eph_sel[2];
+    case SYS_QZS: return eph_sel[3];
+    case SYS_CMP: return eph_sel[4];
+    case SYS_IRN: return eph_sel[5];
+    case SYS_SBS: return eph_sel[6];
     }
     return 0;
 }
