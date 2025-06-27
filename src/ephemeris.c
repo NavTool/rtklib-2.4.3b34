@@ -440,15 +440,33 @@ static eph_t *seleph(gtime_t time, int sat, int iode, const nav_t *nav)
     for (i=0;i<nav->n;i++) {
         if (nav->eph[i].sat!=sat) continue;
         if (iode>=0&&nav->eph[i].iode!=iode) continue;
-        if (sys==SYS_GAL) {
+        if (sys==SYS_GAL)
+        {
             sel=getseleph(SYS_GAL);
-            if (sel==0&&!(nav->eph[i].code&(1<<9))) continue; /* I/NAV */
-            if (sel==1&&!(nav->eph[i].code&(1<<8))) continue; /* F/NAV */
-            if (timediff(nav->eph[i].toe,time)>=0.0) continue; /* AOD<=0 */
+            if (sel==0&&!(nav->eph[i].code&(1<<9)))
+            {
+                continue; /* I/NAV */
+            }
+            if (sel==1&&!(nav->eph[i].code&(1<<8)))
+            {
+                continue; /* F/NAV */
+            }
+            if (timediff(nav->eph[i].toe,time)>=0.0)
+            {
+                continue; /* AOD<=0 */
+            }
         }
-        if ((t=fabs(timediff(nav->eph[i].toe,time)))>tmax) continue;
-        if (iode>=0) return nav->eph+i;
-        if (t<=tmin) {j=i; tmin=t;} /* toe closest to time */
+        if ((t=fabs(timediff(nav->eph[i].toe,time)))>tmax)
+        {
+            continue;
+        }
+        if (iode>=0)
+        {return nav->eph+i;
+        }
+        if (t<=tmin)
+        {
+            j=i; tmin=t;/* toe closest to time */
+        }
     }
     if (iode>=0||j<0) {
         trace(3,"no broadcast ephemeris: %s sat=%2d iode=%3d\n",

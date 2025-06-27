@@ -451,8 +451,10 @@ static int estpos(const obsd_t *obs, int n, const double *rs, const double *dts,
             return stat;
         }
     }
-    if (i>=MAXITR) sprintf(msg,"iteration divergent i=%d",i);
-    
+    if (i>=MAXITR)
+    {
+        sprintf(msg,"iteration divergent i=%d",i);
+    }
     free(v); free(H); free(var);
     return 0;
 }
