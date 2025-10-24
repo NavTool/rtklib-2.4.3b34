@@ -1640,6 +1640,7 @@ EXPORT void outsolex(FILE *fp, const sol_t *sol, const ssat_t *ssat,
                      const solopt_t *opt);
 EXPORT int outnmea_rmc(uint8_t *buff, const sol_t *sol);
 EXPORT int outnmea_gga(uint8_t *buff, const sol_t *sol);
+EXPORT int outnmea_gga_ex(uint8_t *buff, const sol_t *sol, double hdop);
 EXPORT int outnmea_gsa(uint8_t *buff, const sol_t *sol,
                        const ssat_t *ssat);
 EXPORT int outnmea_gsv(uint8_t *buff, const sol_t *sol,
