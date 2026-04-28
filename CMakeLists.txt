@@ -57,11 +57,13 @@ set(SOURCES
 )
 
 add_library(${PROJECT_NAME} STATIC ${SOURCES})
-IF(CMAKE_HOST_SYSTEM_NAME MATCHES "Windows")
-target_link_libraries(${PROJECT_NAME} winmm)
-ELSE()
-target_link_libraries(${PROJECT_NAME} pthread m)
-ENDIF()
+IF(CMAKE_SYSTEM_NAME MATCHES "Windows")
+	target_link_libraries(${PROJECT_NAME} winmm)
+	ELSEIF(CMAKE_SYSTEM_NAME MATCHES "Android")
+	target_link_libraries(${PROJECT_NAME} m)
+	ELSE()
+	target_link_libraries(${PROJECT_NAME} pthread m)
+	ENDIF()
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 add_executable(rtklib_rtkconv bin/convbin.c)
